@@ -21,9 +21,6 @@ function calculateHydrogenProduction() {
     const hydrogenEnergyDensity = 33.33; // kWh/kg
     const fuelCellEfficiency = 0.6; // 60% efficiency
 
-    // Calculate hydrogen color and type
-    const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
-
     // Calculate total energy input per day
     const totalEnergyInput = energyProduced * availableHours; // MWh per day
 
@@ -36,17 +33,14 @@ function calculateHydrogenProduction() {
     // Calculate Hydrogen Energy Cost per kg
     const hydrogenEnergyCost = totalEnergyCost / hydrogenProduced;
 
-    // Calculate Cost of Hydrogen
-    const costOfHydrogen = hydrogenEnergyCost;
-
-    // Calculate Fuel Cell Storage with Efficiency Loss
-    const fuelCellStorage = (hydrogenProduced * hydrogenEnergyDensity * fuelCellEfficiency) / 1000; // Convert kWh to MWh
-
     // Calculate Value of Hydrogen Low and High
     const lowPrice = 3; // $/kg
     const highPrice = 6; // $/kg
     const hydrogenValueLow = hydrogenProduced * lowPrice;
     const hydrogenValueHigh = hydrogenProduced * highPrice;
+
+    // Calculate Fuel Cell Storage with Efficiency Loss
+    const fuelCellStorage = (hydrogenProduced * hydrogenEnergyDensity * fuelCellEfficiency) / 1000; // Convert kWh to MWh
 
     // Calculate tax credits
     const taxCredits = hydrogenProduced * taxCreditPerKg;
@@ -55,11 +49,10 @@ function calculateHydrogenProduction() {
     const numberOfSheps = energyProduced / shepCapacity;
 
     // Update output fields
-    document.getElementById('hydrogenColor').textContent = hydrogenColor;
-    document.getElementById('hydrogenType').textContent = hydrogenType;
+    document.getElementById('hydrogenColor').textContent = 'Green';
+    document.getElementById('hydrogenType').textContent = 'Renewable Electrolysis';
     document.getElementById('hydrogenProduced').textContent = `${hydrogenProduced.toFixed(2)} kg`;
     document.getElementById('hydrogenEnergyCost').textContent = `$${hydrogenEnergyCost.toFixed(2)}/kg`;
-    document.getElementById('costOfHydrogen').textContent = `$${costOfHydrogen.toFixed(2)}/kg`;
     document.getElementById('hydrogenValueLow').textContent = `$${hydrogenValueLow.toFixed(2)}`;
     document.getElementById('hydrogenValueHigh').textContent = `$${hydrogenValueHigh.toFixed(2)}`;
     document.getElementById('fuelCellStorage').textContent = `${fuelCellStorage.toFixed(2)} MWh`;
