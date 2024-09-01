@@ -15,9 +15,8 @@ function calculateHydrogenProduction() {
     }
 
     // Constants
-    const plantCapacity = 1.5; // MW
-    const dailyProduction = 500; // kg/day
-    const dailyEnergyRequired = 36; // MWh
+    const hydrogenProductionRate = 20.833; // kg of hydrogen produced per MW-hour
+    const plantCapacity = 1.5; // MW per hour
     const taxCreditPerKg = 3; // $/kg
     const hydrogenEnergyDensity = 33.33; // kWh/kg
     const fuelCellEfficiency = 0.6; // 60% efficiency
@@ -25,22 +24,24 @@ function calculateHydrogenProduction() {
     // Calculate hydrogen color and type
     const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
 
-    // Calculate hydrogen produced per day
+    // Calculate daily hydrogen production
     const dailyEnergyInput = energyProduced * availableHours; // MWh
-    const productionFactor = Math.min(dailyEnergyInput / dailyEnergyRequired, 1);
-    const hydrogenProduced = dailyProduction * productionFactor;
+    const hydrogenProduced = dailyEnergyInput * hydrogenProductionRate; // kg
 
     // Calculate Hydrogen Energy Cost
     const hydrogenEnergyCost = (costPerKwh * dailyEnergyInput * 1000) / hydrogenProduced;
 
+    // Calculate Cost of Hydrogen
+    const costOfHydrogen = costPerKwh * dailyEnergyInput * 1000 / hydrogenProduced;
+
     // Calculate Fuel Cell Storage
     const fuelCellStorage = (hydrogenProduced * hydrogenEnergyDensity * fuelCellEfficiency) / 1000; // Convert kWh to MWh
 
-    // Calculate Value of Hydrogen (using average of low and high prices)
+    // Calculate Value of Hydrogen Low and High
     const lowPrice = 3; // $/kg
     const highPrice = 6; // $/kg
-    const averagePrice = (lowPrice + highPrice) / 2;
-    const hydrogenValue = hydrogenProduced * averagePrice;
+    const hydrogenValueLow = hydrogenProduced * lowPrice;
+    const hydrogenValueHigh = hydrogenProduced * highPrice;
 
     // Calculate tax credits
     const taxCredits = hydrogenProduced * taxCreditPerKg;
@@ -50,7 +51,9 @@ function calculateHydrogenProduction() {
     document.getElementById('hydrogenType').textContent = hydrogenType;
     document.getElementById('hydrogenProduced').textContent = `${hydrogenProduced.toFixed(2)} kg`;
     document.getElementById('hydrogenEnergyCost').textContent = `$${hydrogenEnergyCost.toFixed(2)}/kg`;
-    document.getElementById('hydrogenValue').textContent = `$${hydrogenValue.toFixed(2)}`;
+    document.getElementById('costOfHydrogen').textContent = `$${costOfHydrogen.toFixed(2)}/kg`;
+    document.getElementById('hydrogenValueLow').textContent = `$${hydrogenValueLow.toFixed(2)}`;
+    document.getElementById('hydrogenValueHigh').textContent = `$${hydrogenValueHigh.toFixed(2)}`;
     document.getElementById('fuelCellStorage').textContent = `${fuelCellStorage.toFixed(2)} MWh`;
     document.getElementById('taxCredits').textContent = `$${taxCredits.toFixed(2)}`;
 }
