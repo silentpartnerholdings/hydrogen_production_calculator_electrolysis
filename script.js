@@ -30,8 +30,11 @@ function calculateHydrogenProduction() {
     // Calculate daily hydrogen production
     const hydrogenProduced = hydrogenProductionRate * totalEnergyInput; // kg per day
 
-    // Calculate Hydrogen Energy Cost
-    const hydrogenEnergyCost = (costPerKwh * totalEnergyInput * 1000) / hydrogenProduced;
+    // Calculate total energy cost
+    const totalEnergyCost = costPerKwh * totalEnergyInput * 1000; // $ (total cost for the energy produced)
+
+    // Calculate Hydrogen Energy Cost per kg
+    const hydrogenEnergyCost = totalEnergyCost / hydrogenProduced;
 
     // Calculate Cost of Hydrogen
     const costOfHydrogen = hydrogenEnergyCost;
