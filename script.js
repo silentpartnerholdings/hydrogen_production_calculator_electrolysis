@@ -15,8 +15,8 @@ function calculateHydrogenProduction() {
     }
 
     // Constants
-    const hydrogenProductionRate = 20.833; // kg of hydrogen produced per MW-hour
-    const plantCapacity = 1.5; // MW per hour
+    const hydrogenProductionRate = 13.8886667; // kg of hydrogen produced per MWh
+    const shepCapacity = 1.5; // MW per SHEP
     const taxCreditPerKg = 3; // $/kg
     const hydrogenEnergyDensity = 33.33; // kWh/kg
     const fuelCellEfficiency = 0.6; // 60% efficiency
@@ -25,16 +25,15 @@ function calculateHydrogenProduction() {
     const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
 
     // Calculate daily hydrogen production
-    const dailyEnergyInput = energyProduced * availableHours; // MWh
-    const hydrogenProduced = dailyEnergyInput * hydrogenProductionRate; // kg
+    const hydrogenProduced = hydrogenProductionRate * energyProduced * availableHours; // kg per day
 
     // Calculate Hydrogen Energy Cost
-    const hydrogenEnergyCost = (costPerKwh * dailyEnergyInput * 1000) / hydrogenProduced;
+    const hydrogenEnergyCost = (costPerKwh * energyProduced * 1000) / hydrogenProduced;
 
     // Calculate Cost of Hydrogen
-    const costOfHydrogen = costPerKwh * dailyEnergyInput * 1000 / hydrogenProduced;
+    const costOfHydrogen = hydrogenEnergyCost;
 
-    // Calculate Fuel Cell Storage
+    // Calculate Fuel Cell Storage with Efficiency Loss
     const fuelCellStorage = (hydrogenProduced * hydrogenEnergyDensity * fuelCellEfficiency) / 1000; // Convert kWh to MWh
 
     // Calculate Value of Hydrogen Low and High
@@ -46,6 +45,9 @@ function calculateHydrogenProduction() {
     // Calculate tax credits
     const taxCredits = hydrogenProduced * taxCreditPerKg;
 
+    // Calculate the number of SHEPs required
+    const numberOfSheps = energyProduced / shepCapacity;
+
     // Update output fields
     document.getElementById('hydrogenColor').textContent = hydrogenColor;
     document.getElementById('hydrogenType').textContent = hydrogenType;
@@ -56,6 +58,7 @@ function calculateHydrogenProduction() {
     document.getElementById('hydrogenValueHigh').textContent = `$${hydrogenValueHigh.toFixed(2)}`;
     document.getElementById('fuelCellStorage').textContent = `${fuelCellStorage.toFixed(2)} MWh`;
     document.getElementById('taxCredits').textContent = `$${taxCredits.toFixed(2)}`;
+    document.getElementById('numberOfSheps').textContent = `${numberOfSheps.toFixed(2)} SHEPs`;
 }
 
 function getHydrogenColorAndType(energyType) {
