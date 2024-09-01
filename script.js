@@ -35,7 +35,7 @@ function calculateHydrogenProduction() {
 
     // Calculate Value of Hydrogen Low and High
     const lowPrice = 3; // $/kg
-    const highPrice = 6; // $/kg
+    const highPrice = 15; // $/kg
     const hydrogenValueLow = hydrogenProduced * lowPrice;
     const hydrogenValueHigh = hydrogenProduced * highPrice;
 
