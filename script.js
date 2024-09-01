@@ -24,11 +24,14 @@ function calculateHydrogenProduction() {
     // Calculate hydrogen color and type
     const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
 
+    // Calculate total energy input per day
+    const totalEnergyInput = energyProduced * availableHours; // MWh per day
+
     // Calculate daily hydrogen production
-    const hydrogenProduced = hydrogenProductionRate * energyProduced * availableHours; // kg per day
+    const hydrogenProduced = hydrogenProductionRate * totalEnergyInput; // kg per day
 
     // Calculate Hydrogen Energy Cost
-    const hydrogenEnergyCost = (costPerKwh * energyProduced * 1000) / hydrogenProduced;
+    const hydrogenEnergyCost = (costPerKwh * totalEnergyInput * 1000) / hydrogenProduced;
 
     // Calculate Cost of Hydrogen
     const costOfHydrogen = hydrogenEnergyCost;
