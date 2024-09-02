@@ -48,9 +48,12 @@ function calculateHydrogenProduction() {
     // Calculate the number of SHEPs required
     const numberOfSheps = energyProduced / shepCapacity;
 
+    // Get hydrogen color and type based on energy type
+    const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
+
     // Update output fields
-    document.getElementById('hydrogenColor').textContent = 'Green';
-    document.getElementById('hydrogenType').textContent = 'Renewable Electrolysis';
+    document.getElementById('hydrogenColor').textContent = hydrogenColor;
+    document.getElementById('hydrogenType').textContent = hydrogenType;
     document.getElementById('hydrogenProduced').textContent = `${hydrogenProduced.toFixed(2)} kg`;
     document.getElementById('hydrogenEnergyCost').textContent = `$${hydrogenEnergyCost.toFixed(2)}/kg`;
     document.getElementById('hydrogenValueLow').textContent = `$${hydrogenValueLow.toFixed(2)}`;
