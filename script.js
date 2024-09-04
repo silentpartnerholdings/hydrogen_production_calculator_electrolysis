@@ -6,20 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function calculateHydrogenProduction() {
     const costPerKwh = parseFloat(document.getElementById('costPerKwh').value);
     const energyProduced = parseFloat(document.getElementById('energyProduced').value);
-    const energyType = document.getElementById('energyType').value;
     const availableHours = parseFloat(document.getElementById('availableHours').value);
+    const hydrogenSalePrice = parseFloat(document.getElementById('hydrogenSalePrice').value);
 
     if (isNaN(costPerKwh) || isNaN(energyProduced) || isNaN(availableHours)) {
-        alert('Please enter valid numbers for all input fields.');
+        alert('Please enter valid numbers for all required input fields.');
         return;
     }
 
     // Constants
-    const hydrogenProductionRate = 13.8886667; // kg of hydrogen produced per MWh
-    const shepCapacity = 1.5; // MW per SHEP
+    const hydrogenProductionRate = 20.833 / 1.5; // kg of hydrogen produced per MWh (20.833 kg per 1.5 MW)
     const taxCreditPerKg = 3; // $/kg
-    const hydrogenEnergyDensity = 33.33; // kWh/kg
-    const fuelCellEfficiency = 0.6; // 60% efficiency
+    const lowPrice = 4; // $/kg
+    const highPrice = 35; // $/kg
 
     // Calculate total energy input per day
     const totalEnergyInput = energyProduced * availableHours; // MWh per day
@@ -34,46 +33,28 @@ function calculateHydrogenProduction() {
     const hydrogenEnergyCost = totalEnergyCost / hydrogenProduced;
 
     // Calculate Value of Hydrogen Low and High
-    const lowPrice = 3; // $/kg
-    const highPrice = 15; // $/kg
     const hydrogenValueLow = hydrogenProduced * lowPrice;
     const hydrogenValueHigh = hydrogenProduced * highPrice;
 
-    // Calculate Fuel Cell Storage with Efficiency Loss
-    const fuelCellStorage = (hydrogenProduced * hydrogenEnergyDensity * fuelCellEfficiency) / 1000; // Convert kWh to MWh
+    // Calculate Expected Hydrogen Revenue
+    const expectedRevenue = isNaN(hydrogenSalePrice) ? "N/A" : hydrogenProduced * hydrogenSalePrice;
+
+    // Calculate MW of Electrolyzers (90% of input MW)
+    const electrolyzersMW = energyProduced * 0.9;
+
+    // Calculate Estimated Facility Cost
+    const facilityCost = electrolyzersMW * 1000 * 1000; // $1000 per kW
 
     // Calculate tax credits
     const taxCredits = hydrogenProduced * taxCreditPerKg;
 
-    // Calculate the number of SHEPs required
-    const numberOfSheps = energyProduced / shepCapacity;
-
-    // Get hydrogen color and type based on energy type
-    const [hydrogenColor, hydrogenType] = getHydrogenColorAndType(energyType);
-
     // Update output fields
-    document.getElementById('hydrogenColor').textContent = hydrogenColor;
-    document.getElementById('hydrogenType').textContent = hydrogenType;
     document.getElementById('hydrogenProduced').textContent = `${hydrogenProduced.toFixed(2)} kg`;
     document.getElementById('hydrogenEnergyCost').textContent = `$${hydrogenEnergyCost.toFixed(2)}/kg`;
-    document.getElementById('hydrogenValueLow').textContent = `$${hydrogenValueLow.toFixed(2)}`;
-    document.getElementById('hydrogenValueHigh').textContent = `$${hydrogenValueHigh.toFixed(2)}`;
-    document.getElementById('fuelCellStorage').textContent = `${fuelCellStorage.toFixed(2)} MWh`;
-    document.getElementById('taxCredits').textContent = `$${taxCredits.toFixed(2)}`;
-    document.getElementById('numberOfSheps').textContent = `${numberOfSheps.toFixed(2)} SHEPs`;
-}
-
-function getHydrogenColorAndType(energyType) {
-    switch (energyType) {
-        case 'solar':
-        case 'wind':
-        case 'hydro':
-            return ['Green', 'Renewable Electrolysis'];
-        case 'nuclear':
-            return ['Pink', 'Nuclear Electrolysis'];
-        case 'fossilFuel':
-            return ['Gray', 'Steam Methane Reforming'];
-        default:
-            return ['Unknown', 'Unknown'];
-    }
+    document.getElementById('hydrogenValueLow').textContent = `$${hydrogenValueLow.toFixed(2)} per day`;
+    document.getElementById('hydrogenValueHigh').textContent = `$${hydrogenValueHigh.toFixed(2)} per day`;
+    document.getElementById('expectedRevenue').textContent = expectedRevenue === "N/A" ? "N/A" : `$${expectedRevenue.toFixed(2)} per day`;
+    document.getElementById('electrolyzersMW').textContent = `${electrolyzersMW.toFixed(2)} MW`;
+    document.getElementById('facilityCost').textContent = `$${facilityCost.toFixed(2)}`;
+    document.getElementById('taxCredits').textContent = `$${taxCredits.toFixed(2)} per day`;
 }
