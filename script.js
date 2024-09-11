@@ -43,7 +43,7 @@ function calculateHydrogenProduction() {
     const electrolyzersMW = energyProduced * 0.9;
 
     // Calculate Estimated Facility Cost
-    const facilityCost = electrolyzersMW * 1000 * 1000; // $1000 per kW
+    const facilityCost = electrolyzersMW * 2.5 * 1000000; // $2.5 million per MW
 
     // Calculate tax credits
     const taxCredits = hydrogenProduced * taxCreditPerKg;
